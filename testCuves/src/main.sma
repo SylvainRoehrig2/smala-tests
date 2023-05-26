@@ -44,8 +44,15 @@ Component root {
   NativeAction na (myFunc, 1)
   Spike ending
 
-
+  //@ensures fc.rleft = (255,255,50) && fc.rright = (255,255,50)
   FillColor fc (255,255,50)
+  /*
+  @component:Rectangle ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : true, allow_rotation : false
+                                          max_y_move : 600, always_within_frame : true}
+  @component:Rectangle ruleset deformable {allow_width_change : false, allow_height_change : true
+                                          max_height : 600, min_height : 0}
+  @component:Rectangle requires fc == (255,255,50)
+  */
   Rectangle rleft (0, 0, 100, 600, 5, 5)
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
@@ -64,6 +71,7 @@ Component root {
       600 =: rleft.height
     }
 
+    //@ensures rleft:moveable && rleft.deformable
     State left{
       Button b (f, "Change to Right", 150, 300)
       cl.tick -> incLeft
@@ -72,6 +80,7 @@ Component root {
       //600 - incLeft.state => log.input
       rleft.height <= 0 -> ending
     }
+    //@ensures rright:moveable && rright.deformable
     State right{
       Button b (f, "Change to Left", 150, 300)
       cl.tick -> incRight

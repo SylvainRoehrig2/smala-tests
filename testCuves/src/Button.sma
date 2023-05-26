@@ -17,6 +17,8 @@ use display
 use gui
 
 _define_
+//ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : false, always_within_frame : true}
+//@ensures moveable
 Button (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
 
@@ -32,7 +34,7 @@ Button (Process frame, string label, double x_, double y_) {
 
   FSM fsm {
     State idle {
-      //@ensures fc.r == 255
+      //@ensures fc.r == 50
       50 =: fc.r
     }
     State pressed {
@@ -46,7 +48,6 @@ Button (Process frame, string label, double x_, double y_) {
 
   FillColor w (255, 255, 255)
   Text thisLabel (10, 10, label)
-
   r.height / 2 =: thisLabel.y
   thisLabel.width + 20 =:> r.width
   thisLabel.width + 20 =:> r.width
