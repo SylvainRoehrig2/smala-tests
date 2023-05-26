@@ -42,10 +42,11 @@ Component root {
   f.close -> ex
 
   NativeAction na (myFunc, 1)
+  Spike caution
   Spike ending
 
-  //@ensures fc.rleft = (255,255,50) && fc.rright = (255,255,50)
-  FillColor fc (255,255,50)
+  //@ensures fcl= (255,255,50)
+  FillColor fcl (150,255,0)
   /*
   @component:Rectangle ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : true, allow_rotation : false
                                           max_y_move : 600, always_within_frame : true}
@@ -53,9 +54,14 @@ Component root {
                                           max_height : 600, min_height : 0}
   @component:Rectangle requires fc == (255,255,50)
   */
-  Rectangle rleft (0, 0, 100, 600, 5, 5)
+  Rectangle rleft (0, 0, 100, 600, 5, 5)  
+  //@ensures fcr= (255,255,50)
+  FillColor fcr (150,255,0)
+  
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
+  OutlineColor _ (255, 0, 0)
+  Line l (0, 400, 400, 400)
   Clock cl (17)
   Incr incLeft (1)
   Incr incRight (1)
@@ -69,36 +75,62 @@ Component root {
       0 =: rleft.y
       600 =: rright.height
       600 =: rleft.height
+      255 =: fcl.g
+      255 =: fcr.g
     }
 
     //@ensures rleft:moveable && rleft.deformable
     State left{
+      
       Button b (f, "Change to Right", 150, 300)
+      rleft.height <= 200 -> caution
       cl.tick -> incLeft
       incLeft.state => rleft.y
       600 - incLeft.state => rleft.height
+      //600 - incLeft.state => log.input
+    }
+    State leftCaution{
+
+      Button b (f, "Change to Right !", 150, 300)
+      cl.tick -> incLeft
+      incLeft.state => rleft.y
+      600 - incLeft.state => rleft.height
+      50 =: fcl.g 
       //600 - incLeft.state => log.input
       rleft.height <= 0 -> ending
     }
     //@ensures rright:moveable && rright.deformable
     State right{
+
       Button b (f, "Change to Left", 150, 300)
+      rright.height <= 200 -> caution
       cl.tick -> incRight
       incRight.state => rright.y
       600 - incRight.state => rright.height
       //600 - incRight.state => log.input
+    }
+    State rightCaution{
+      Button b (f, "Change to Left !", 150, 300)
+      cl.tick -> incRight
+      incRight.state => rright.y
+      600 - incRight.state => rright.height
+      50 =: fcr.g 
       rright.height <= 0 -> ending
     }
     State end{
       FillColor _ (255,255,255)
-      Text text (120, 50, "Alert : One cuve is empty !")
+      Text text (120, 50, "One cuve is empty !")
       Button b (f, "Try again", 150, 300)
     }
     pause -> left (pause.b.click)
     left -> right (left.b.click)
     right-> left (right.b.click)
-    right -> end (ending)
-    left -> end (ending)
+    leftCaution -> right (leftCaution.b.click)
+    rightCaution-> left (rightCaution.b.click)
+    right -> rightCaution (caution)
+    left -> leftCaution (caution)
+    rightCaution -> end (ending)
+    leftCaution -> end (ending)
     end -> pause (end.b.click)
   }
 }

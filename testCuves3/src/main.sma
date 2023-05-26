@@ -42,10 +42,11 @@ Component root {
   f.close -> ex
 
   NativeAction na (myFunc, 1)
+  Spike caution
   Spike ending
 
-  //@ensures fc.rleft = (255,255,50) && fc.rright = (255,255,50)
-  FillColor fc (255,255,50)
+  //@ensures fcl= (255,255,50)
+  FillColor fcl (200,255,0)
   /*
   @component:Rectangle ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : true, allow_rotation : false
                                           max_y_move : 600, always_within_frame : true}
@@ -53,7 +54,10 @@ Component root {
                                           max_height : 600, min_height : 0}
   @component:Rectangle requires fc == (255,255,50)
   */
-  Rectangle rleft (0, 0, 100, 600, 5, 5)
+  Rectangle rleft (0, 0, 100, 600, 5, 5)  
+  //@ensures fcr= (255,255,50)
+  FillColor fcr (200,255,0)
+  
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
   Clock cl (17)
@@ -69,29 +73,37 @@ Component root {
       0 =: rleft.y
       600 =: rright.height
       600 =: rleft.height
+      255 =: fcl.g
+      255 =: fcr.g
     }
 
     //@ensures rleft:moveable && rleft.deformable
     State left{
+      
       Button b (f, "Change to Right", 150, 300)
+      rleft.height <= 0 -> ending
       cl.tick -> incLeft
       incLeft.state => rleft.y
       600 - incLeft.state => rleft.height
+      Modulo modl (0,255)
+      (rleft.height/600)*255 => fcl.g
       //600 - incLeft.state => log.input
-      rleft.height <= 0 -> ending
     }
     //@ensures rright:moveable && rright.deformable
     State right{
+
       Button b (f, "Change to Left", 150, 300)
+      rright.height <= 0 -> ending
       cl.tick -> incRight
       incRight.state => rright.y
       600 - incRight.state => rright.height
+      Modulo modl (0,255)
+      (rright.height/600)*255 => fcr.g
       //600 - incRight.state => log.input
-      rright.height <= 0 -> ending
     }
     State end{
       FillColor _ (255,255,255)
-      Text text (120, 50, "Alert : One cuve is empty !")
+      Text text (120, 50, "One cuve is empty !")
       Button b (f, "Try again", 150, 300)
     }
     pause -> left (pause.b.click)
