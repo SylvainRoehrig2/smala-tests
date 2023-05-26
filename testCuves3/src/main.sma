@@ -37,7 +37,7 @@ myFunc (Process c)
 
 _main_
 Component root {
-  Frame f ("Cuve Test", 0, 0, 400, 600)
+  Frame f ("Cuve Test 3", 0, 0, 400, 600)
   Exit ex (0, 1)
   f.close -> ex
 
@@ -60,21 +60,29 @@ Component root {
   
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
-  Clock cl (17)
+  Int original_height (600)
+
+  Clock cl (18)
   Incr incLeft (1)
   Incr incRight (1)
   TextPrinter log
+
   FSM fsm {
-    State pause{
+    //@ensures rright.y == 0 && rright.x == f.width-100 && rright.height == f.height
+    //@ensures rleft.height == f.height && original_height == f.height && fcl.g == 255 && fcr.g == 255
+    State start{
       Button b (f, "Start", 150, 300)
       0 =: incLeft.state
       0 =: incRight.state
       0 =: rright.y
       0 =: rleft.y
-      600 =: rright.height
-      600 =: rleft.height
+      f.width -100 =: rright.x
+      f.height =: rright.height
+      f.height =: rleft.height
+      f.height =: original_height
       255 =: fcl.g
       255 =: fcr.g
+      5000/f.height =: cl.period
     }
 
     //@ensures rleft:moveable && rleft.deformable
@@ -84,9 +92,9 @@ Component root {
       rleft.height <= 0 -> ending
       cl.tick -> incLeft
       incLeft.state => rleft.y
-      600 - incLeft.state => rleft.height
+      original_height - incLeft.state => rleft.height
       Modulo modl (0,255)
-      (rleft.height/600)*255 => fcl.g
+      (rleft.height/original_height)*255 => fcl.g
       //600 - incLeft.state => log.input
     }
     //@ensures rright:moveable && rright.deformable
@@ -96,9 +104,9 @@ Component root {
       rright.height <= 0 -> ending
       cl.tick -> incRight
       incRight.state => rright.y
-      600 - incRight.state => rright.height
+      original_height - incRight.state => rright.height
       Modulo modl (0,255)
-      (rright.height/600)*255 => fcr.g
+      (rright.height/original_height)*255 => fcr.g
       //600 - incRight.state => log.input
     }
     State end{
@@ -106,11 +114,11 @@ Component root {
       Text text (120, 50, "One cuve is empty !")
       Button b (f, "Try again", 150, 300)
     }
-    pause -> left (pause.b.click)
+    start -> left (start.b.click)
     left -> right (left.b.click)
     right-> left (right.b.click)
     right -> end (ending)
     left -> end (ending)
-    end -> pause (end.b.click)
+    end -> start (end.b.click)
   }
 }
