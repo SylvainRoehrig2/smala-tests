@@ -45,28 +45,34 @@ Component root {
   Spike caution
   Spike ending
 
-  //@ensures fcl= (255,255,50)
+  //@ensures fcl= (150,255,50)
   FillColor fcl (150,255,0)
   /*
   @component:Rectangle ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : true, allow_rotation : false
                                           max_y_move : 600, always_within_frame : true}
   @component:Rectangle ruleset deformable {allow_width_change : false, allow_height_change : true
                                           max_height : 600, min_height : 0}
-  @component:Rectangle requires fc == (255,255,50)
+  @requires fcl == (150,255,50)
   */
   Rectangle rleft (0, 0, 100, 600, 5, 5)  
-  //@ensures fcr= (255,255,50)
+  //@ensures fcr= (150,255,50)
   FillColor fcr (150,255,0)
-  
+  //@requires fcr == (150,255,50)
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
+  //@ensures _ = (255,0,0)
   OutlineColor _ (255, 0, 0)
+  //@requires _ = (255,0,0)
   Line l (0, 400, 400, 400)
   Clock cl (17)
   Incr incLeft (1)
   Incr incRight (1)
   TextPrinter log
   FSM fsm {
+    /*
+    @ensures rright.y == 0 && rleft.y == 0 && rright.height == 600
+    @ensures rleft.height == 600 && fcl.g == 255 && fcr.g == 255
+    */
     State pause{
       Button b (f, "Start", 150, 300)
       0 =: incLeft.state
@@ -79,7 +85,7 @@ Component root {
       255 =: fcr.g
     }
 
-    //@ensures rleft:moveable && rleft.deformable
+    //@ensures rleft:moveable && rleft:deformable
     State left{
       
       Button b (f, "Change to Right", 150, 300)
@@ -89,8 +95,8 @@ Component root {
       600 - incLeft.state => rleft.height
       //600 - incLeft.state => log.input
     }
+    //@ensures rleft:moveable && rlfet:deformable && fcl.g == 50
     State leftCaution{
-
       Button b (f, "Change to Right !", 150, 300)
       cl.tick -> incLeft
       incLeft.state => rleft.y
@@ -109,6 +115,7 @@ Component root {
       600 - incRight.state => rright.height
       //600 - incRight.state => log.input
     }
+    //@ensures rright:moveable && rright.deformable && fcr.g == 50
     State rightCaution{
       Button b (f, "Change to Left !", 150, 300)
       cl.tick -> incRight

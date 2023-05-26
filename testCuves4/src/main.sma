@@ -19,6 +19,7 @@ use gui
 
 // local version
 import Button
+import Warning
 
 // smala lib
 //import gui.widgets.Button
@@ -61,7 +62,10 @@ Component root {
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
   Int original_height (600)
-
+  //@ensures _ = (255,0,0)
+  OutlineColor _ (255, 0, 0)
+  //@requires _ = (255,0,0)
+  Line l (0, 400, 400, 400)
   Clock cl (18)
   Incr incLeft (1)
   Incr incRight (1)
@@ -89,7 +93,7 @@ Component root {
     State left{
       
       Button b (f, "Change to Right", 150, 300)
-      rleft.height <= 0 -> ending
+      rleft.height <= 200 -> caution
       cl.tick -> incLeft
       incLeft.state => rleft.y
       original_height - incLeft.state => rleft.height
@@ -97,17 +101,40 @@ Component root {
       (rleft.height/original_height)*255 => fcl.g
       //600 - incLeft.state => log.input
     }
+    //@ensures rleft:moveable && rlfet:deformable && fcl.g == 50
+    State leftCaution{
+      Button b (f, "Change to Right !", 150, 300)
+      cl.tick -> incLeft
+      incLeft.state => rleft.y
+      original_height - incLeft.state => rleft.height
+      Modulo modl (0,255)
+      (rleft.height/original_height)*255 => fcl.g
+      Warning warn (f, "Cuve presque vide", 0,0) 
+      //600 - incLeft.state => log.input
+      rleft.height <= 0 -> ending
+    }
     //@ensures rright:moveable && rright.deformable
     State right{
 
       Button b (f, "Change to Left", 150, 300)
-      rright.height <= 0 -> ending
+      rright.height <= 200 -> caution
       cl.tick -> incRight
       incRight.state => rright.y
       original_height - incRight.state => rright.height
       Modulo modl (0,255)
       (rright.height/original_height)*255 => fcr.g
       //600 - incRight.state => log.input
+    }
+    //@ensures rright:moveable && rright.deformable && fcr.g == 50
+    State rightCaution{
+      Button b (f, "Change to Left !", 150, 300)
+      cl.tick -> incRight
+      incRight.state => rright.y
+      original_height - incRight.state => rright.height
+      Modulo modl (0,255)
+      (rright.height/original_height)*255 => fcr.g
+      Warning warn (f, "Cuve presque vide", 0,0) 
+      rright.height <= 0 -> ending
     }
     State end{
       FillColor _ (255,255,255)
@@ -117,8 +144,12 @@ Component root {
     start -> left (start.b.click)
     left -> right (left.b.click)
     right-> left (right.b.click)
-    right -> end (ending)
-    left -> end (ending)
+    leftCaution -> right (leftCaution.b.click)
+    rightCaution-> left (rightCaution.b.click)
+    right -> rightCaution (caution)
+    left -> leftCaution (caution)
+    rightCaution -> end (ending)
+    leftCaution -> end (ending)
     end -> start (end.b.click)
   }
 }
