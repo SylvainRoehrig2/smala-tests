@@ -106,8 +106,10 @@ Component root {
       Button b (f, "Change to Right !", 150, 300)
       cl.tick -> incLeft
       incLeft.state => rleft.y
-      600 - incLeft.state => rleft.height
-      50 =: fcl.g 
+      original_height - incLeft.state => rleft.height
+      Modulo modl (0,255)
+      (rleft.height/original_height)*255 => fcl.g
+      Warning warn (f, "Cuve presque vide", 0,0) 
       //600 - incLeft.state => log.input
       rleft.height <= 0 -> ending
     }
@@ -128,8 +130,10 @@ Component root {
       Button b (f, "Change to Left !", 150, 300)
       cl.tick -> incRight
       incRight.state => rright.y
-      600 - incRight.state => rright.height
-      50 =: fcr.g 
+      original_height - incRight.state => rright.height
+      Modulo modl (0,255)
+      (rright.height/original_height)*255 => fcr.g
+      Warning warn (f, "Cuve presque vide", 0,0) 
       rright.height <= 0 -> ending
     }
     State end{
@@ -148,14 +152,4 @@ Component root {
     leftCaution -> end (ending)
     end -> start (end.b.click)
   }
-
-  /* behavior */
-  Switch sw (deactivated) {
-    Component activated {
-      Warning warn (f, "Cuve presque vide", 0,0) 
-    }
-    Component deactivated
-  }
-  (rright.height <= 200 || rleft.height <= 200) && (rleft.height > 1 && rright.height > 1 ) ? "activated" : "deactivated" => sw.state
-  
 }
