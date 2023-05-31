@@ -17,15 +17,14 @@ use display
 use gui
 
 _define_
-//ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : false, always_within_frame : true}
-//@ensures moveable
+//@ensures moveable && clickable && scalable
 Button (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
-
-  /*----- interface -----*/
+  /*----- children -----*/
   x aka t.tx
   y aka t.ty
   Spike click
+  String text (label)
   /*----- interface -----*/
 
   FillColor fc (50, 0, 0)
@@ -47,7 +46,8 @@ Button (Process frame, string label, double x_, double y_) {
   }
 
   FillColor w (255, 255, 255)
-  Text thisLabel (10, 10, label)
+  Text thisLabel (10, 10, "impossible_to_see")
+  text =:> thisLabel.text
   r.height / 2 =: thisLabel.y
   thisLabel.width + 20 =:> r.width
   thisLabel.width + 20 =:> r.width

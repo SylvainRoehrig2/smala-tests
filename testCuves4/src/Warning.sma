@@ -4,8 +4,7 @@ use display
 use gui
 
 _define_
-//ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : false, always_within_frame : true}
-//@ensures moveable
+//@ensures moveable && scalable && readable && perceptible
 Warning (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
   /*----- interface -----*/
@@ -22,8 +21,8 @@ Warning (Process frame, string label, double x_, double y_) {
   FontSize fs (0, 18) 
   Text warning (0, 0, "Attention")
   Text thisLabel (0, 20, label)
-  frame.height / 2 =:> thisLabel.y
-  frame.width /2 =:> thisLabel.x
+  frame.height / 2 -100 =:> thisLabel.y
+  frame.width / 2 =:> thisLabel.x
   thisLabel.y - 30 =:> warning.y
   thisLabel.x =:> warning.x
 
