@@ -4,7 +4,7 @@ use display
 use gui
 
 _define_
-//@ensures moveable && scalable
+//@ensures moveable && scalable && readable && perceptible
 Warning (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
   /*----- interface -----*/

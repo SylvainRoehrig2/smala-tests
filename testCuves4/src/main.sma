@@ -118,7 +118,7 @@ Component root {
       original_height - incLeft.state => rleft.height
       (rleft.height/original_height)*255 => fcl.g
     }
-    //@ensures rleft:moveable && rlfet:deformable && fcl.g == 50 && rleft:scalable
+    //@ensures rleft:moveable && rlfet:deformable && rleft:scalable
     State leftCaution{
       "Change to right !!!" =: b.text
       cl.tick -> incLeft
@@ -129,6 +129,8 @@ Component root {
       @component:Warning ruleset moveable {allow_manual_y_move : false, allow_y_move : true, allow_manual_x_move : false, allow_x_move : true, 
                           allow_rotation : false, always_within_frame : true}
       @component:Warning ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true, frame_width_dependent : true}
+      @component:Warning ruleset readable {min_opacity : 100}
+      @component:Warning ruleset perceptible {min_fontsize : 18, layer : top, percentage : 100}
       */
       Warning warn (f, "Cuve presque vide", 0,0) 
       rleft.height <= 0 -> ending
@@ -142,7 +144,7 @@ Component root {
       original_height - incRight.state => rright.height
       (rright.height/original_height)*255 => fcr.g
     }
-    //@ensures rright:moveable && rright.deformable && fcr.g == 50 && rright:scalable
+    //@ensures rright:moveable && rright.deformable && rright:scalable
     State rightCaution{
       "Change to left !!!" =: b.text
       cl.tick -> incRight
