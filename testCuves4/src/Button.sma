@@ -17,9 +17,7 @@ use display
 use gui
 
 _define_
-//@ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : false, always_within_frame : true}
-//@ruleset clickable {isClickable : true, signal_on : release}
-//@ensures moveable && clickable
+//@ensures moveable && clickable && scalable
 Button (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
   /*----- children -----*/

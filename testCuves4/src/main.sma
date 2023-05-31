@@ -46,35 +46,49 @@ Component root {
   Spike caution
   Spike ending
 
-  //@ensures fcl= (255,255,50)
+  Int original_height (600)
+
+  //@ensures fcl= (200,255,50)
   FillColor fcl (200,255,0)
   /*
-  @component:Rectangle ruleset moveable {allow_manual_x_move : false, allow_manual_y_move : true, allow_rotation : false
-                                          max_y_move : 600, always_within_frame : true}
+  @component:Rectangle ruleset moveable {allow_manual_y_move : false, allow_y_move : true, allow_rotation : false
+                                          max_y_move : unlimited, always_within_frame : true}
   @component:Rectangle ruleset deformable {allow_width_change : false, allow_height_change : true
-                                          max_height : 600, min_height : 0}
+                                          max_height : unlimited, min_height : 0}
+  @component:Rectangle ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true}
   @component:Rectangle requires fc == (255,255,50)
   */
   Rectangle rleft (0, 0, 100, 600, 5, 5)  
-  //@ensures fcr= (255,255,50)
+  //@ensures fcr= (200,255,50)
   FillColor fcr (200,255,0)
   
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
-  Int original_height (600)
   //@ensures _ = (255,0,0)
   OutlineColor _ (255, 0, 0)
   //@requires _ = (255,0,0)
   Line l (0, 400, 400, 400)
+
+  //@ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true}
   Clock cl (18)
+
+  //@component:Incr ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true}
   Incr incLeft (1)
   Incr incRight (1)
-  TextPrinter log
+
+  /*
+  @ruleset moveable {allow_manual_y_move : false, allow_y_move : true, allow_manual_x_move : false, allow_x_move : true, 
+                      allow_rotation : false, always_within_frame : true}
+  @ruleset clickable {isClickable : true, has_signal_on : release}
+  @ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true, frame_width_dependent : true}
+  */
   Button b (f, "Start", 150, 300)
 
   FSM fsm {
-    //@ensures rright.y == 0 && rright.x == f.width-100 && rright.height == f.height
-    //@ensures rleft.height == f.height && original_height == f.height && fcl.g == 255 && fcr.g == 255
+    //@ensures rright.y == 0 && rright.x == f.width-100 && original_height == f.height && fcl.g == 255 && fcr.g == 255
+    //@ensures l.y1 == f.height - 200 && l.y2 == f.height -200 && l.x2 == f.width
+    //@ensures b.x == (f.width / 2)-50 && b.y == (f.height /2)-50 && cl.period == 5000/f.height
+    //@ensures rleft:scalable && rright:scalable
     State start{
       "Start" =: b.text
       0 =: incLeft.state
@@ -85,8 +99,8 @@ Component root {
       f.height =: rright.height
       f.height =: rleft.height
       f.height =: original_height
-      f.height - 200 =: l.y1
-      f.height - 200 =: l.y2
+      f.height - original_height/3 =: l.y1
+      f.height - original_height/3 =: l.y2
       f.width =: l.x2
       (f.height / 2) -50 =: b.y
       (f.width / 2) -50 =: b.x
@@ -95,47 +109,45 @@ Component root {
       5000/f.height =: cl.period
     }
 
-    //@ensures rleft:moveable && rleft.deformable
+    //@ensures rleft:moveable && rleft.deformable && rleft:scalable
     State left{
       "Change to right" =: b.text
-      rleft.height <= 200 -> caution
+      rleft.height <= original_height/3 -> caution
       cl.tick -> incLeft
       incLeft.state => rleft.y
       original_height - incLeft.state => rleft.height
-      Modulo modl (0,255)
       (rleft.height/original_height)*255 => fcl.g
-      //600 - incLeft.state => log.input
     }
-    //@ensures rleft:moveable && rlfet:deformable && fcl.g == 50
+    //@ensures rleft:moveable && rlfet:deformable && fcl.g == 50 && rleft:scalable
     State leftCaution{
       "Change to right !!!" =: b.text
       cl.tick -> incLeft
       incLeft.state => rleft.y
       original_height - incLeft.state => rleft.height
-      Modulo modl (0,255)
       (rleft.height/original_height)*255 => fcl.g
+      /*
+      @component:Warning ruleset moveable {allow_manual_y_move : false, allow_y_move : true, allow_manual_x_move : false, allow_x_move : true, 
+                          allow_rotation : false, always_within_frame : true}
+      @component:Warning ruleset scalable {update_on_frame_refresh : false, frame_height_dependent : true, frame_width_dependent : true}
+      */
       Warning warn (f, "Cuve presque vide", 0,0) 
-      //600 - incLeft.state => log.input
       rleft.height <= 0 -> ending
     }
-    //@ensures rright:moveable && rright.deformable
+    //@ensures rright:moveable && rright.deformable && rright:scalable
     State right{
       "Change to left" =: b.text
-      rright.height <= 200 -> caution
+      rright.height <= original_height/3 -> caution
       cl.tick -> incRight
       incRight.state => rright.y
       original_height - incRight.state => rright.height
-      Modulo modl (0,255)
       (rright.height/original_height)*255 => fcr.g
-      //600 - incRight.state => log.input
     }
-    //@ensures rright:moveable && rright.deformable && fcr.g == 50
+    //@ensures rright:moveable && rright.deformable && fcr.g == 50 && rright:scalable
     State rightCaution{
       "Change to left !!!" =: b.text
       cl.tick -> incRight
       incRight.state => rright.y
       original_height - incRight.state => rright.height
-      Modulo modl (0,255)
       (rright.height/original_height)*255 => fcr.g
       Warning warn (f, "Cuve presque vide", 0,0) 
       rright.height <= 0 -> ending
