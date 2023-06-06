@@ -24,17 +24,6 @@ import Warning
 // smala lib
 //import gui.widgets.Button
 
-_native_code_
-%{
-#include <iostream>
-%}
-
-_action_
-myFunc (Process c) 
-%{
-  std::cout << ("Button clicked") << std::endl;
-%}
-
 
 _main_
 Component root {
@@ -42,7 +31,6 @@ Component root {
   Exit ex (0, 1)
   f.close -> ex
 
-  NativeAction na (myFunc, 1)
   Spike caution
   Spike ending
 

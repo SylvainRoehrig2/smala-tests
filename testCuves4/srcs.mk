@@ -10,7 +10,7 @@ srcs_sma := src/Button.sma  src/Warning.sma src/main.sma
 #srcs_sma := $(shell find $(src_dir) -name "*.sma")
 
 # native sources
-srcs_other := src/foo.cpp
+#srcs_other := src/foo.cpp
 # or
 #srcs_other := $(shell find $(src_dir) -name "*.cpp")
 
