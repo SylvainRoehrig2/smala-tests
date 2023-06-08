@@ -21,17 +21,6 @@ import Button
 // smala lib
 //import gui.widgets.Button
 
-_native_code_
-%{
-#include <iostream>
-%}
-
-_action_
-myFunc (Process c) 
-%{
-  std::cout << ("Button clicked") << std::endl;
-%}
-
 
 _main_
 Component root {

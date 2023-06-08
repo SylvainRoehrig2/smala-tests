@@ -37,9 +37,9 @@ Component root {
   Int original_height (600)
 
   FillColor fcl (200,255,0)
-  Rectangle rleft (0, 0, 100, 600, 5, 5)  
-  FillColor fcr (200,255,0)
-  
+  Rectangle rleft (0, 0, 100, 600, 5, 5) 
+
+  FillColor fcr (200,255,0)  
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
   OutlineColor _ (255, 0, 0)
@@ -51,7 +51,12 @@ Component root {
 
   Button b (f, "Start", 150, 300)
 
+  //@ensures (! Rectangle:moveable_x_axis)
+  //@ensures Rectangle:moveable_y_axis
+  //@ensures b:is_up_to_date
   FSM fsm {
+    //@ensures Rectangle:green
+    //@ensures Rectangle:moveable_x_axis
     State start{
       "Start" =: b.text
       0 =: incLeft.state
@@ -71,6 +76,7 @@ Component root {
       255 =: fcr.g
       5000/f.height =: cl.period
     }
+    //@ensures (! rleft:green)
     State left{
       "Change to right" =: b.text
       rleft.height <= original_height/3 -> caution
@@ -79,6 +85,7 @@ Component root {
       original_height - incLeft.state => rleft.height
       (rleft.height/original_height)*255 => fcl.g
     }
+    //@ensures rleft:red
     State leftCaution{
       "Change to right !!!" =: b.text
       cl.tick -> incLeft
@@ -88,6 +95,7 @@ Component root {
       Warning warn (f, "Cuve presque vide", 0,0) 
       rleft.height <= 0 -> ending
     }
+    //@ensures (! rright:green)
     State right{
       "Change to left" =: b.text
       rright.height <= original_height/3 -> caution
@@ -96,6 +104,7 @@ Component root {
       original_height - incRight.state => rright.height
       (rright.height/original_height)*255 => fcr.g
     }
+    //@ensures rright:red
     State rightCaution{
       "Change to left !!!" =: b.text
       cl.tick -> incRight
