@@ -1,7 +1,7 @@
 /////////GLOBAL/////////
 <global>
 /*
-@ruleset correct_text {warning.text == "Attention"}
+@ruleset correct_text {warning:text == "Attention"}
 */
 </global>
 

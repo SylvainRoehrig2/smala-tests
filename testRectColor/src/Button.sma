@@ -17,6 +17,8 @@ use display
 use gui
 
 _define_
+//@file "ButtonRAIS.sma"
+//@ensures r:correct_button_color
 Button (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
   /*----- children -----*/
@@ -35,7 +37,7 @@ Button (Process frame, string label, double x_, double y_) {
       50 =: fc.r
     }
     State pressed {
-      150 =: fc.r
+      //150 =: fc.r //Pour respecter le ensures
     }
     idle->pressed (r.press)
     pressed->idle (r.release, click)

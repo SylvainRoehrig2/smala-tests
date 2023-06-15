@@ -37,9 +37,9 @@ Component root {
   Int original_height (600)
 
   FillColor fcl (200,255,0)
-  Rectangle rleft (0, 0, 100, 600, 5, 5)  
-  FillColor fcr (200,255,0)
-  
+  Rectangle rleft (0, 0, 100, 600, 5, 5) 
+
+  FillColor fcr (200,255,0)  
   Rectangle rright (300, 0, 100, 600, 5, 5)
 
   OutlineColor _ (255, 0, 0)

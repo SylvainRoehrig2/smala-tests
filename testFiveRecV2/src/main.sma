@@ -19,6 +19,7 @@ use gui
 
 
 _main_
+//@file "RAIS.sma
 Component root {
   Frame f ("Test Cinq Rectangles", 0, 0, 400, 600)
   Exit ex (0, 1)
@@ -30,17 +31,17 @@ Component root {
 
   Component blueRects {
     FillColor fcBlue (0,0,255)
-    //@ensures blueRec1:blue_rec_correct
+    //@ensures blueRects.blueRec1:blue_rec_correct
     Rectangle blueRec1 (101, 300, 100, 50, 0, 0)
 
-    //@ensures blueRec2:blue_rec_correct
+    //@ensures blueRects.blueRec2:blue_rec_correct
     Rectangle blueRec2 (202, 50, 100, 50, 0, 0)
 
-    //@ensures blueRec3:blue_rec_correct
+    //@ensures blue_rec_correct
     Rectangle blueRec3 (250, 150, 100, 50, 0, 0)
   }
 
   FillColor fcGreen(0,255,0)
-  //@ensures green_rec_correct
+  //@ensures greenRec:green_rec_correct
   Rectangle greenRec (100, 400, 150, 100, 0, 0)    
 }
