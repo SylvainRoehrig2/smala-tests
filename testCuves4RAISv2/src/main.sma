@@ -24,7 +24,7 @@ import Warning
 // smala lib
 //import gui.widgets.Button
 
-
+//@file "RAIS.sma"
 _main_
 Component root {
   Frame f ("Cuve Test 4", 0, 0, 400, 600)
@@ -51,7 +51,13 @@ Component root {
 
   Button b (f, "Start", 150, 300)
 
+  //@ensures (! Rectangle:moveable_x_axis)
+  //@ensures Rectangle:moveable_y_axis
+  //@ensures b:is_up_to_date
+  //@ensures correct_layer
   FSM fsm {
+    //@ensures Rectangle:green
+    //@ensures Rectangle:moveable_x_axis
     State start{
       "Start" =: b.text
       0 =: incLeft.state
@@ -71,6 +77,7 @@ Component root {
       255 =: fcr.g
       5000/f.height =: cl.period
     }
+    //@ensures rleft:change_color
     State left{
       "Change to right" =: b.text
       rleft.height <= original_height/3 -> caution
@@ -79,6 +86,7 @@ Component root {
       original_height - incLeft.state => rleft.height
       (rleft.height/original_height)*255 => fcl.g
     }
+    //@ensures rleft:change_color
     State leftCaution{
       "Change to right !!!" =: b.text
       cl.tick -> incLeft
@@ -88,6 +96,7 @@ Component root {
       Warning warn (f, "Cuve presque vide", 0,0) 
       rleft.height <= 0 -> ending
     }
+    //@ensures rright:change_color
     State right{
       "Change to left" =: b.text
       rright.height <= original_height/3 -> caution
@@ -96,6 +105,7 @@ Component root {
       original_height - incRight.state => rright.height
       (rright.height/original_height)*255 => fcr.g
     }
+    //@ensures rright:change_color
     State rightCaution{
       "Change to left !!!" =: b.text
       cl.tick -> incRight
@@ -105,6 +115,7 @@ Component root {
       Warning warn (f, "Cuve presque vide", 0,0) 
       rright.height <= 0 -> ending
     }
+    //@ensures rright:red || rleft:red
     State end{
       FillColor _ (255,255,255)
       Text text (120, 50, "One cuve is empty !")

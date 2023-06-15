@@ -28,14 +28,11 @@ Component root {
   Exit ex (0, 1)
   f.close -> ex
 
-  //@global ruleset red {color == (255,0,0)}
-  //@global ruleset green {color == (0,255,0)}
   Spike incremOnly
   Spike decremOnly
   Spike allButtonSpike
 
   FillColor fc (0,0,0)
-  //@component:Rectangle ruleset correct_width {width > 100 && width < 500}
   Rectangle r (0, 0, 300, 150, 0, 0)  
   FSM fsm {
     //@ensures r:green
@@ -53,15 +50,14 @@ Component root {
     pressed->idle (f.release)
   }
 
-  //@global ruleset dynamic_width {exists (<process_id|expression> =: width)}
-  //@ensures r:dynamic_width
   AssignmentSequence incrementWidth (1) {
     r.width + 50 =: r.width
   } 
   AssignmentSequence decrementWidth (1) {
     r.width - 50 =: r.width
   }
- 
+  
+  //@requires r:dynamic_width
   //@ensures r:correct_width
   FSM buttons{
     State allButtons {
