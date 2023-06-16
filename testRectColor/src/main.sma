@@ -35,7 +35,6 @@ Component root {
     Rectangle rec1 (0, 0, 100, 200, 5, 5)  
   }
 
-  //TODO : put these in a Component
   FillColor fcOrange (0,0,0)
   Rectangle rec2 (150, 0, 100, 200, 5, 5)  
 
@@ -49,23 +48,23 @@ Component root {
 
   Switch sw (idle) {
       Component idle {
-        //@ensures greenRectangle.rec1:green
+        //@ensures greenRectangle.rec1:$green
         #0F9A0F =: greenRectangle.fcGreen.value
-        //@ensures rec3:red
+        //@ensures rec3:$red
         #9A0F0F =: fcRed.value
-        //@ensures rec2:orange
+        //@ensures rec2:$orange
         #9A6A0F =: fcOrange.value
       }
       Component rec1Change {
-        //@ensures greenRectangle.rec1:same_color_as_rec3
+        //@ensures greenRectangle.rec1:$same_color_as_rec3
         fcRed.value =: greenRectangle.fcGreen.value
       }
       Component rec2Change {
-        //@ensures rec2:same_color_as_rec1
+        //@ensures rec2:$same_color_as_rec1
         greenRectangle.fcGreen.value =: fcOrange.value
       }
       Component rec3Change {
-        //@ensures rec3:same_color_as_rec2
+        //@ensures rec3:$same_color_as_rec2
         fcOrange.value =: fcRed.value
       }
     }

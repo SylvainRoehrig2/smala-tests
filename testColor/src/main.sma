@@ -19,6 +19,7 @@ use gui
 
 
 _main_
+//@file "RAIS.sma"
 Component root {
   Frame f ("Test Change Color", 0, 0, 400, 600)
   Exit ex (0, 1)
@@ -36,8 +37,8 @@ Component root {
 
   OutlineColor _ (255, 255, 255)
   FillColor fc (0,255,0)
-  //@requires outline_color_existence
-  //@ensures rec:white_outline
+  //@requires $outline_color_existence
+  //@ensures rec:$white_outline
   Rectangle rec (100, 130, 100, 50, 5, 5)  
   
   f.height / 2 - rec.height =: rec.x
@@ -48,15 +49,15 @@ Component root {
   mouseTracking = 1
   f.move.x=> tx.text
   f.move.y=> ty.text
-  //@ensures blue_color_updates && rec:blue_correct_color
+  //@ensures $blue_color_updates && rec:$blue_correct_color
   (f.move.x / f.width)*255 => fc.b
-  //@ensures red_color_updates && rec:red_correct_color
+  //@ensures $red_color_updates && rec:$red_correct_color
   (f.move.y / f.height)*255 => fc.r
   fc.b => min.left
   fc.r => min.right
   fc.b => max.left
   fc.r => max.right
-  //@ensures green_color_updates && rec:green_correct_color
+  //@ensures $green_color_updates && rec:$green_correct_color
   255 - (max.result - min.result) => fc.g
   fc.r => red.text
   fc.b => blu.text

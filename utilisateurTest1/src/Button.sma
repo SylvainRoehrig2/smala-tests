@@ -31,14 +31,12 @@ Button (Process frame, string label, double x_, double y_) {
 
   Rectangle r (0, 0, 100, 70, 10, 10)
 
-  //@ensures $correct_button_color
   FSM fsm {
-    //@ensures $assignement_exists
     State idle {
       50 =: fc.r
     }
     State pressed {
-      //150 =: fc.r //Pour respecter le ensures
+      150 =: fc.r
     }
     idle->pressed (r.press)
     pressed->idle (r.release, click)
@@ -46,6 +44,7 @@ Button (Process frame, string label, double x_, double y_) {
   }
 
   FillColor w (255, 255, 255)
+  //@ensures thisLabel:$white && thisLabel:$after_rectangle
   Text thisLabel (10, 10, "impossible_to_see")
   text =:> thisLabel.text
   r.height / 2 =: thisLabel.y
