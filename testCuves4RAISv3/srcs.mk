@@ -5,7 +5,7 @@ exe_dir := .
 
 exe := button
 
-srcs_sma := src/main.sma
+srcs_sma := src/Button.sma  src/Warning.sma src/main.sma
 # or
 #srcs_sma := $(shell find $(src_dir) -name "*.sma")
 

@@ -17,7 +17,6 @@ use display
 use gui
 
 _define_
-//@ensures moveable && clickable && scalable
 Button (Process frame, string label, double x_, double y_) {
   Translation t (x_, y_)
   /*----- children -----*/
@@ -33,11 +32,9 @@ Button (Process frame, string label, double x_, double y_) {
 
   FSM fsm {
     State idle {
-      //@ensures fc.r == 50
       50 =: fc.r
     }
     State pressed {
-      //@ensures fc.r == 150
       150 =: fc.r
     }
     idle->pressed (r.press)
